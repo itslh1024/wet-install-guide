@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>湿贴法 / Wet Install Method</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root{
+  --bg:#F5F7F8;
+  --card:#FFFFFF;
+  --ink:#12222C;
+  --ink-soft:#51636E;
+  --water:#0E7C9C;
+  --water-deep:#0A5A72;
+  --water-pale:#E4F1F4;
+  --amber:#C97A2B;
+  --amber-bg:#FBF0E2;
+  --amber-ink:#7A4B15;
+  --green:#2E7D5B;
+  --line:#DCE3E6;
+  --radius:10px;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Inter',sans-serif;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+
+.wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+/* ---------- Header ---------- */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(245,247,248,0.92);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 20px;max-width:760px;margin:0 auto;
+}
+.brand{
+  display:flex;align-items:center;gap:8px;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.2px;
+}
+.brand-mark{
+  width:22px;height:22px;border-radius:6px;
+  background:linear-gradient(135deg,var(--water),var(--water-deep));
+  flex-shrink:0;
+}
+.langtoggle{
+  display:flex;background:var(--card);border:1px solid var(--line);border-radius:999px;
+  padding:3px;font-family:'IBM Plex Mono',monospace;font-size:12px;
+}
+.langtoggle button{
+  border:none;background:transparent;padding:6px 12px;border-radius:999px;cursor:pointer;
+  color:var(--ink-soft);font-family:inherit;font-size:12px;font-weight:600;
+  transition:background .18s ease,color .18s ease;
+}
+.langtoggle button.active{background:var(--water);color:#fff;}
+
+/* ---------- Hero ---------- */
+.hero{padding:36px 0 8px;}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:1.5px;
+  color:var(--water-deep);text-transform:uppercase;margin-bottom:10px;
+}
+h1{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:clamp(26px,6vw,36px);line-height:1.15;margin:0 0 12px;letter-spacing:-0.3px;
+}
+.lede{font-size:15px;color:var(--ink-soft);max-width:56ch;margin:0 0 28px;}
+
+/* ---------- Diagram ---------- */
+.diagram-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 18px 18px;margin-bottom:40px;
+}
+.diagram-svg-wrap{width:100%;max-width:520px;margin:0 auto;}
+svg{width:100%;height:auto;display:block;}
+
+.bubble{transition:opacity .6s ease, transform .6s ease;}
+.state-after .bubble{opacity:0;transform:translateY(-6px);}
+.layer-water{transition:opacity .6s ease;}
+.state-after .layer-water{opacity:0.35;}
+.squeegee{transition:transform 1s cubic-bezier(.4,0,.2,1);transform:translateX(-40px);}
+.state-after .squeegee{transform:translateX(430px);}
+@media (prefers-reduced-motion:reduce){
+  .bubble,.layer-water,.squeegee{transition:none;}
+}
+
+.diagram-legend{
+  display:flex;justify-content:center;gap:18px;margin-top:10px;flex-wrap:wrap;
+  font-size:12px;color:var(--ink-soft);
+}
+.diagram-legend span{display:flex;align-items:center;gap:6px;}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+
+.diagram-controls{display:flex;justify-content:center;margin-top:16px;}
+.state-btn{
+  font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:600;
+  border:1px solid var(--water);color:var(--water-deep);background:var(--water-pale);
+  padding:9px 18px;border-radius:999px;cursor:pointer;
+  transition:background .18s ease,color .18s ease;
+}
+.state-btn:hover{background:var(--water);color:#fff;}
+.diagram-caption{
+  text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:10px;
+}
+
+/* ---------- Materials ---------- */
+.section{margin-bottom:44px;}
+.section-head{
+  font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;
+  margin:0 0 4px;
+}
+.section-sub{font-size:13px;color:var(--ink-soft);margin:0 0 18px;}
+
+.materials-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+}
+@media (min-width:520px){.materials-grid{grid-template-columns:repeat(3,1fr);}}
+.material-item{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 12px;text-align:center;
+}
+.material-item svg{width:28px;height:28px;margin-bottom:8px;color:var(--water-deep);}
+.material-item .m-label{font-size:12.5px;font-weight:500;}
+
+/* ---------- Phases / Steps ---------- */
+.phase{margin-bottom:26px;}
+.phase-head{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+}
+.phase-tag{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
+  color:var(--water-deep);background:var(--water-pale);
+  padding:4px 9px;border-radius:6px;letter-spacing:0.5px;
+}
+.phase-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15.5px;}
+
+.step-card{
+  display:flex;gap:14px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;
+}
+.step-num{
+  font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;
+  color:var(--water);flex-shrink:0;width:26px;
+}
+.step-body{flex:1;}
+.step-title{font-weight:600;font-size:14px;margin-bottom:3px;}
+.step-desc{font-size:13px;color:var(--ink-soft);}
+
+.warning-box{
+  display:flex;gap:10px;background:var(--amber-bg);border:1px solid #EBCFA0;
+  border-radius:var(--radius);padding:14px 16px;margin-top:10px;
+}
+.warning-icon{flex-shrink:0;width:18px;height:18px;color:var(--amber);margin-top:1px;}
+.warning-text{font-size:13px;color:var(--amber-ink);line-height:1.55;}
+.warning-text strong{font-weight:700;}
+
+/* ---------- Troubleshoot table ---------- */
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);}
+table{width:100%;min-width:480px;border-collapse:collapse;font-size:13px;}
+th{
+  text-align:left;background:var(--water-pale);color:var(--water-deep);
+  font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:11.5px;
+  padding:10px 14px;letter-spacing:0.3px;text-transform:uppercase;
+}
+td{padding:11px 14px;border-top:1px solid var(--line);color:var(--ink);}
+tr:nth-child(even) td{background:#FAFBFC;}
+
+/* ---------- Footer ---------- */
+footer{
+  border-top:1px solid var(--line);padding:22px 0 40px;
+  font-size:12px;color:var(--ink-soft);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand"><span class="brand-mark"></span><span data-i18n="brand">背膜安装工艺</span></div>
+    <div class="langtoggle">
+      <button id="btn-zh" class="active" onclick="setLang('zh')">中文</button>
+      <button id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">安装工艺 · Installation Method</div>
+    <h1 data-i18n="h1">湿贴法：为什么要喷皂水</h1>
+    <p class="lede" data-i18n="lede">水凝背膜背胶是接触即粘的强粘性材料。皂水在膜和后盖之间形成一层临时润滑层，延迟粘性生效，给操作者留出对位和调整的时间窗口——这是湿贴法存在的根本原因。</p>
+  </section>
+
+  <div class="diagram-card">
+    <div class="diagram-svg-wrap">
+      <svg id="diagram" viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- back cover -->
+        <rect x="20" y="150" width="440" height="34" rx="10" fill="#3C4C56"/>
+        <!-- water layer -->
+        <rect class="layer-water" x="20" y="118" width="440" height="34" rx="6" fill="#0E7C9C" opacity="0.55"/>
+        <!-- bubbles -->
+        <circle class="bubble" cx="90"  cy="132" r="6" fill="#EAF6FA"/>
+        <circle class="bubble" cx="170" cy="138" r="4.5" fill="#EAF6FA"/>
+        <circle class="bubble" cx="250" cy="130" r="5.5" fill="#EAF6FA"/>
+        <circle class="bubble" cx="330" cy="140" r="4" fill="#EAF6FA"/>
+        <circle class="bubble" cx="400" cy="128" r="6.5" fill="#EAF6FA"/>
+        <!-- film layer -->
+        <rect x="20" y="94" width="440" height="26" rx="6" fill="#F2F5F6" stroke="#C7D2D6" stroke-width="1"/>
+        <!-- squeegee -->
+        <g class="squeegee">
+          <rect x="0" y="88" width="10" height="44" rx="3" fill="#0A5A72"/>
+          <rect x="-6" y="80" width="22" height="8" rx="3" fill="#0A5A72"/>
+        </g>
+      </svg>
+    </div>
+    <div class="diagram-legend">
+      <span><i class="dot" style="background:#F2F5F6;border:1px solid #C7D2D6"></i><span data-i18n="legend-film">水凝背膜</span></span>
+      <span><i class="dot" style="background:#0E7C9C"></i><span data-i18n="legend-water">皂水层</span></span>
+      <span><i class="dot" style="background:#3C4C56"></i><span data-i18n="legend-back">手机后盖</span></span>
+    </div>
+    <div class="diagram-controls">
+      <button class="state-btn" id="diagram-toggle" onclick="toggleDiagram()" data-i18n="diagram-btn">运行：贴合 → 刮除气泡</button>
+    </div>
+    <p class="diagram-caption" data-i18n="diagram-caption">皂水层未失效前，膜可自由滑动对位；刮卡从中心向四周推，把水分和气泡一并排出。</p>
+  </div>
+
+  <section class="section">
+    <div class="section-head" data-i18n="materials-head">准备材料</div>
+    <p class="section-sub" data-i18n="materials-sub">已按机型裁型的背膜是前提，其余为标准耗材</p>
+    <div class="materials-grid">
+      <div class="material-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="3" width="12" height="18" rx="2"/><circle cx="12" cy="8" r="1.4" fill="currentColor" stroke="none"/></svg>
+        <div class="m-label" data-i18n="mat-film">已裁型背膜</div>
+      </div>
+      <div class="material-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+        <div class="m-label" data-i18n="mat-wipe">酒精棉片</div>
+      </div>
+      <div class="material-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 3h4l1 3-2 2v11a2 2 0 0 1-4 0V8L6 6l1-3z"/><path d="M15 8c2 0 3 1 3 3"/></svg>
+        <div class="m-label" data-i18n="mat-spray">皂水喷壶</div>
+      </div>
+      <div class="material-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="9" width="12" height="7" rx="1.5"/><path d="M16 11l4-2v8l-4-2"/></svg>
+        <div class="m-label" data-i18n="mat-card">绒布刮卡</div>
+      </div>
+      <div class="material-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16v9a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V4z"/><path d="M8 21h8"/></svg>
+        <div class="m-label" data-i18n="mat-cloth">微纤维布</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head" data-i18n="steps-head">操作步骤</div>
+    <p class="section-sub" data-i18n="steps-sub">四个阶段，共10步</p>
+
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag" data-i18n="phase1-tag">阶段一</span><span class="phase-title" data-i18n="phase1-title">准备</span></div>
+      <div class="step-card"><div class="step-num">01</div><div class="step-body"><div class="step-title" data-i18n="s1-t">裁膜</div><div class="step-desc" data-i18n="s1-d">原料膜先经切割机按机型裁出摄像头孔、按键开孔与边缘轮廓，未裁型不进入下一步。</div></div></div>
+      <div class="step-card"><div class="step-num">02</div><div class="step-body"><div class="step-title" data-i18n="s2-t">清洁后盖</div><div class="step-desc" data-i18n="s2-d">酒精棉片全面擦拭，重点清理摄像头模组周围缝隙，避免颗粒卡在孔位边缘。</div></div></div>
+      <div class="step-card"><div class="step-num">03</div><div class="step-body"><div class="step-title" data-i18n="s3-t">配皂水</div><div class="step-desc" data-i18n="s3-d">纯净水加少量中性洗洁精，摇匀装喷壶；浓度不宜过高，否则粘性恢复变慢。</div></div></div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag" data-i18n="phase2-tag">阶段二</span><span class="phase-title" data-i18n="phase2-title">贴合</span></div>
+      <div class="step-card"><div class="step-num">04</div><div class="step-body"><div class="step-title" data-i18n="s4-t">喷洒</div><div class="step-desc" data-i18n="s4-d">后盖整体喷薄层皂水；膜揭去底层保护膜后，背胶面同样喷皂水。</div></div></div>
+      <div class="step-card"><div class="step-num">05</div><div class="step-body"><div class="step-title" data-i18n="s5-t">对位镜头孔</div><div class="step-desc" data-i18n="s5-d">先卡准镜头孔位置，再向四周展开摊平——孔位误差比边缘误差更容易被客户察觉。</div></div></div>
+      <div class="step-card"><div class="step-num">06</div><div class="step-body"><div class="step-title" data-i18n="s6-t">摊平</div><div class="step-desc" data-i18n="s6-d">从镜头孔向四周轻推，膜浮贴于曲面后盖；皂水失效前可小范围滑动微调。</div></div></div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag" data-i18n="phase3-tag">阶段三</span><span class="phase-title" data-i18n="phase3-title">排气</span></div>
+      <div class="step-card"><div class="step-num">07</div><div class="step-body"><div class="step-title" data-i18n="s7-t">刮除气泡</div><div class="step-desc" data-i18n="s7-d">绒布刮卡从镜头孔周围向四周边缘刮，重点覆盖曲面转折处和四角。</div></div></div>
+      <div class="step-card"><div class="step-num">08</div><div class="step-body"><div class="step-title" data-i18n="s8-t">边缘检查</div><div class="step-desc" data-i18n="s8-d">沿边缘轻压一圈，确认无翘边或空鼓，翘边处单独补刮。</div></div></div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag" data-i18n="phase4-tag">阶段四</span><span class="phase-title" data-i18n="phase4-title">固化</span></div>
+      <div class="step-card"><div class="step-num">09</div><div class="step-body"><div class="step-title" data-i18n="s9-t">静置固化</div><div class="step-desc" data-i18n="s9-d">12–24小时，避免用力擦拭、避免接触水。</div>
+        <div class="warning-box">
+          <svg class="warning-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9L2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+          <div class="warning-text" data-i18n="s9-warn"><strong>禁止用热风枪或吹风机加速固化。</strong>加热会导致凝胶层脱水，削弱粘接强度并加速泛黄，效果适得其反。</div>
+        </div>
+      </div></div>
+      <div class="step-card"><div class="step-num">10</div><div class="step-body"><div class="step-title" data-i18n="s10-t">交付前复查</div><div class="step-desc" data-i18n="s10-d">固化期满后复查镜头孔位对齐、边缘有无残留气泡或水痕，确认无误再交付。</div></div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head" data-i18n="trouble-head">快速排查</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th data-i18n="th-symptom">现象</th><th data-i18n="th-fix">处理</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="tr1-a">镜头孔位对不齐</td><td data-i18n="tr1-b">皂水未失效前揭下重贴</td></tr>
+          <tr><td data-i18n="tr2-a">边缘翘起</td><td data-i18n="tr2-b">曲面转折处补刮，或核查切割公差是否匹配</td></tr>
+          <tr><td data-i18n="tr3-a">72小时后仍有气泡</td><td data-i18n="tr3-b">安装时混入灰尘污染，建议返工重装</td></tr>
+          <tr><td data-i18n="tr4-a">表面发粘或发白</td><td data-i18n="tr4-b">加热处理导致脱水，需更换膜片</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap" data-i18n="footer">内部工艺参考 · 湿贴法安装流程</div>
+</footer>
+
+<script>
+const translations = {
+  zh: {
+    brand:"背膜安装工艺",
+    eyebrow:"安装工艺 · Installation Method",
+    h1:"湿贴法：为什么要喷皂水",
+    lede:"水凝背膜背胶是接触即粘的强粘性材料。皂水在膜和后盖之间形成一层临时润滑层，延迟粘性生效，给操作者留出对位和调整的时间窗口——这是湿贴法存在的根本原因。",
+    "legend-film":"水凝背膜","legend-water":"皂水层","legend-back":"手机后盖",
+    "diagram-btn":"运行：贴合 → 刮除气泡",
+    "diagram-caption":"皂水层未失效前，膜可自由滑动对位；刮卡从中心向四周推，把水分和气泡一并排出。",
+    "materials-head":"准备材料","materials-sub":"已按机型裁型的背膜是前提，其余为标准耗材",
+    "mat-film":"已裁型背膜","mat-wipe":"酒精棉片","mat-spray":"皂水喷壶","mat-card":"绒布刮卡","mat-cloth":"微纤维布",
+    "steps-head":"操作步骤","steps-sub":"四个阶段，共10步",
+    "phase1-tag":"阶段一","phase1-title":"准备",
+    "phase2-tag":"阶段二","phase2-title":"贴合",
+    "phase3-tag":"阶段三","phase3-title":"排气",
+    "phase4-tag":"阶段四","phase4-title":"固化",
+    "s1-t":"裁膜","s1-d":"原料膜先经切割机按机型裁出摄像头孔、按键开孔与边缘轮廓，未裁型不进入下一步。",
+    "s2-t":"清洁后盖","s2-d":"酒精棉片全面擦拭，重点清理摄像头模组周围缝隙，避免颗粒卡在孔位边缘。",
+    "s3-t":"配皂水","s3-d":"纯净水加少量中性洗洁精，摇匀装喷壶；浓度不宜过高，否则粘性恢复变慢。",
+    "s4-t":"喷洒","s4-d":"后盖整体喷薄层皂水；膜揭去底层保护膜后，背胶面同样喷皂水。",
+    "s5-t":"对位镜头孔","s5-d":"先卡准镜头孔位置，再向四周展开摊平——孔位误差比边缘误差更容易被客户察觉。",
+    "s6-t":"摊平","s6-d":"从镜头孔向四周轻推，膜浮贴于曲面后盖；皂水失效前可小范围滑动微调。",
+    "s7-t":"刮除气泡","s7-d":"绒布刮卡从镜头孔周围向四周边缘刮，重点覆盖曲面转折处和四角。",
+    "s8-t":"边缘检查","s8-d":"沿边缘轻压一圈，确认无翘边或空鼓，翘边处单独补刮。",
+    "s9-t":"静置固化","s9-d":"12–24小时，避免用力擦拭、避免接触水。",
+    "s9-warn":"<strong>禁止用热风枪或吹风机加速固化。</strong>加热会导致凝胶层脱水，削弱粘接强度并加速泛黄，效果适得其反。",
+    "s10-t":"交付前复查","s10-d":"固化期满后复查镜头孔位对齐、边缘有无残留气泡或水痕，确认无误再交付。",
+    "trouble-head":"快速排查","th-symptom":"现象","th-fix":"处理",
+    "tr1-a":"镜头孔位对不齐","tr1-b":"皂水未失效前揭下重贴",
+    "tr2-a":"边缘翘起","tr2-b":"曲面转折处补刮，或核查切割公差是否匹配",
+    "tr3-a":"72小时后仍有气泡","tr3-b":"安装时混入灰尘污染，建议返工重装",
+    "tr4-a":"表面发粘或发白","tr4-b":"加热处理导致脱水，需更换膜片",
+    footer:"内部工艺参考 · 湿贴法安装流程"
+  },
+  en: {
+    brand:"Back Film Install Guide",
+    eyebrow:"Installation Method",
+    h1:"Wet Install: Why Soap Water",
+    lede:"Hydrogel back film adhesive bonds on contact. Soap water forms a temporary lubricating layer between film and back cover, delaying adhesion so the installer has a window to align and adjust — this is the entire reason the wet method exists.",
+    "legend-film":"Hydrogel film","legend-water":"Soap-water layer","legend-back":"Phone back cover",
+    "diagram-btn":"Run: Bond → Squeegee out",
+    "diagram-caption":"Before the soap water sets, the film can slide freely to align. The squeegee pushes moisture and air out from center to edge.",
+    "materials-head":"Materials Needed","materials-sub":"Pre-cut film for the device is required; the rest are standard consumables",
+    "mat-film":"Pre-cut film","mat-wipe":"Alcohol wipe","mat-spray":"Soap-water sprayer","mat-card":"Felt squeegee","mat-cloth":"Microfiber cloth",
+    "steps-head":"Procedure","steps-sub":"4 phases, 10 steps",
+    "phase1-tag":"Phase 1","phase1-title":"Preparation",
+    "phase2-tag":"Phase 2","phase2-title":"Bonding",
+    "phase3-tag":"Phase 3","phase3-title":"Degassing",
+    "phase4-tag":"Phase 4","phase4-title":"Curing",
+    "s1-t":"Cut the film","s1-d":"Cut the raw sheet on a plotter to the device's camera cutout, button openings, and edge outline before proceeding.",
+    "s2-t":"Clean the back cover","s2-d":"Wipe thoroughly with an alcohol wipe, focusing on the gap around the camera module — trapped particles distort the cutout fit.",
+    "s3-t":"Mix soap water","s3-d":"Distilled water with a small amount of neutral dish soap. Keep it dilute — too concentrated slows adhesion recovery.",
+    "s4-t":"Spray","s4-d":"Spray a thin layer over the back cover; after peeling the backing, spray the adhesive side of the film too.",
+    "s5-t":"Align the camera cutout","s5-d":"Lock in the camera cutout position first, then spread outward — cutout misalignment is more visible to customers than edge misalignment.",
+    "s6-t":"Lay flat","s6-d":"Push gently outward from the camera cutout so the film floats onto the curved back; minor sliding adjustments are possible before the soap water sets.",
+    "s7-t":"Squeegee out bubbles","s7-d":"Work a felt squeegee from around the camera cutout toward the edges, focusing on curved transitions and corners.",
+    "s8-t":"Check the edges","s8-d":"Press lightly around the perimeter to confirm no lifting or gaps; re-squeegee any lifted spots individually.",
+    "s9-t":"Let it cure","s9-d":"12–24 hours. Avoid wiping hard or exposing it to water.",
+    "s9-warn":"<strong>Never use a heat gun or hair dryer to speed up curing.</strong> Heat dehydrates the gel layer, weakens adhesion, and accelerates yellowing — it works against you.",
+    "s10-t":"Final check before handoff","s10-d":"After curing, re-check the camera cutout alignment and edges for residual bubbles or water marks before handing the device back.",
+    "trouble-head":"Quick Troubleshooting","th-symptom":"Symptom","th-fix":"Fix",
+    "tr1-a":"Camera cutout misaligned","tr1-b":"Lift and re-align before the soap water sets",
+    "tr2-a":"Edge lifting","tr2-b":"Re-squeegee curved transitions, or check cutting tolerance",
+    "tr3-a":"Bubbles remain after 72h","tr3-b":"Dust contamination during install — redo the application",
+    "tr4-a":"Surface feels sticky or turns white","tr4-b":"Caused by heat exposure/dehydration — replace the film",
+    footer:"Internal process reference · Wet install procedure"
+  }
+};
+
+function setLang(lang){
+  document.documentElement.lang = lang === 'zh' ? 'zh' : 'en';
+  document.getElementById('btn-zh').classList.toggle('active', lang==='zh');
+  document.getElementById('btn-en').classList.toggle('active', lang==='en');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    const val = translations[lang][key];
+    if(val !== undefined) el.innerHTML = val;
+  });
+}
+
+let diagramAfter = false;
+function toggleDiagram(){
+  diagramAfter = !diagramAfter;
+  document.getElementById('diagram').classList.toggle('state-after', diagramAfter);
+}
+</script>
+
+</body>
+</html>
